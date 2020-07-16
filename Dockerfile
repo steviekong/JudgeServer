@@ -2,8 +2,10 @@ FROM ubuntu:18.04
 
 COPY build/java_policy /etc
 RUN buildDeps='software-properties-common git libtool cmake python-dev python3-pip python-pip libseccomp-dev' && \
-    apt-get update && apt-get install -y python python3 python-pkg-resources python3-pkg-resources gcc g++ $buildDeps && \
+    apt-get update && apt-get install -y curl python python3 python-pkg-resources python3-pkg-resources gcc g++ $buildDeps && \
     add-apt-repository ppa:openjdk-r/ppa && add-apt-repository ppa:longsleep/golang-backports && apt-get update && apt-get install -y golang-go openjdk-8-jdk && \
+    curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh && bash nodesource_setup.sh && \
+    apt-get install -y nodejs && \
     pip3 install -I --no-cache-dir psutil gunicorn flask requests idna && \
     cd /tmp && git clone -b newnew  --depth 1 https://github.com/QingdaoU/Judger && cd Judger && \
     mkdir build && cd build && cmake .. && make && make install && cd ../bindings/Python && python3 setup.py install && \
