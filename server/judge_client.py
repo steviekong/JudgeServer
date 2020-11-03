@@ -168,7 +168,16 @@ class JudgeClient(object):
         if self._output:
             try:
                 with open(user_output_file, "rb") as f:
-                    run_result["output"] = f.read().decode("utf-8", errors="backslashreplace")
+                    user_output = f.read(512).decode("utf-8", errors="backslashreplace")
+                    run_result["output"] = user_output
+                with open(in_file, "rb") as f:
+                    test_case_input = f.read(512).decode("utf-8", errors="backslashreplace")
+                    run_result["test_case_input"] = test_case_input
+                if not self._test_case_info.get("spj"):
+                    out_file = os.path.join(self._test_case_dir, test_case_info["output_name"])
+                    with open(out_file, "rb") as f:
+                        test_case_output = f.read(512).decode("utf-8", errors="backslashreplace")
+                        run_result["test_case_output"] = test_case_output
             except Exception:
                 pass
 
